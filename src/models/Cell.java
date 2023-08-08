@@ -44,5 +44,11 @@ public class Cell {
         this.cellState = cellState;
     }
 
-
+    public void display(){
+        if(getCellState().equals(CellState.EMPTY)){
+            System.out.println(" - |");
+        } else {
+            System.out.println(" " + getPlayer().getSymbol().getaChar() + " ");
+        }
+    }
 }

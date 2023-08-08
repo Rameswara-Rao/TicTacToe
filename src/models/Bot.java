@@ -3,8 +3,8 @@ package models;
 public class Bot extends Player{
     private BotDifficultyLevel botDifficultyLevel;
 
-    public Bot(String name, Symbol symbol, BotDifficultyLevel botDifficultyLevel) {
-        super(name, symbol, PlayerType.BOT);
+    public Bot(Symbol symbol,String name, BotDifficultyLevel botDifficultyLevel) {
+        super(symbol, name, PlayerType.BOT);
         this.botDifficultyLevel = botDifficultyLevel;
     }
 
@@ -14,5 +14,10 @@ public class Bot extends Player{
 
     public void setBotDifficultyLevel(BotDifficultyLevel botDifficultyLevel) {
         this.botDifficultyLevel = botDifficultyLevel;
+    }
+
+    @Override
+    Cell makeMove() {
+        return super.makeMove();
     }
 }

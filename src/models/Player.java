@@ -5,10 +5,14 @@ public class Player {
     private Symbol symbol;
     private PlayerType playerType;
 
-    public Player(String name, Symbol symbol, PlayerType playerType) {
+    public Player(Symbol symbol, String name, PlayerType playerType) {
         this.name = name;
         this.symbol = symbol;
         this.playerType = playerType;
+    }
+
+    Cell makeMove() {
+        return null;
     }
 
     public String getName() {
@@ -34,6 +38,4 @@ public class Player {
     public void setPlayerType(PlayerType playerType) {
         this.playerType = playerType;
     }
-
-
 }
