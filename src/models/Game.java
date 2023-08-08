@@ -29,6 +29,73 @@ public class Game {
         this.gameStatus = GameStatus.IN_PROGRESS;
     }
 
+    public void printResult(){
+        if(gameStatus.equals(GameStatus.ENDED)){
+            System.out.println("Game has ended.");
+            System.out.println("Winner is: " + winner.getName());
+        } else {
+            System.out.println("Game is draw");
+        }
+    }
+
+    public void printBoard(){
+        this.board.print();
+    }
+
+    private boolean validateMove(Cell cell){
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        if(row < 0 || col < 0 || row >= board.getSize() || col >= board.getSize()){
+            return false;
+        }
+
+        return board.getBoard().get(row).get(col).getCellState().equals(CellState.EMPTY);
+    }
+
+    public void makeMove(){
+        Player currentPlayer = players.get(currentMovePlayerIndex);
+        Cell proposedCell = currentPlayer.makeMove();
+
+        if (!validateMove(proposedCell)) {
+            return;
+        }
+
+        Cell cellInBoard = board.getBoard().get(proposedCell.getRow()).get(proposedCell.getCol());
+        cellInBoard.setCellState(CellState.FILLED);
+        cellInBoard.setPlayer(currentPlayer);
+
+        Move move = new Move(currentPlayer, cellInBoard);
+        moves.add(move);
+
+        if (checkGameWon(currentPlayer, move)) return;
+
+        if (checkDraw()) return;
+
+        currentMovePlayerIndex += 1;
+        currentMovePlayerIndex %= players.size();
+
+    }
+
+    private boolean checkDraw(){
+        if(moves.size() == board.getSize() * board.getSize()){
+            gameStatus = GameStatus.DRAW;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkGameWon(Player currentPlayer, Move move){
+        for(WinningStrategy winningStrategy: winningStrategies){
+            if(winningStrategy.checkWinner(board, move)){
+                gameStatus = GameStatus.ENDED;
+                winner = currentPlayer;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<Move> getMoves() {
         return moves;
     }
@@ -145,19 +212,6 @@ public class Game {
                 throw new RuntimeException("Invalid params for game");
             }
             return new Game(dimension, players, winningStrategies);
-        }
-    }
-
-    public void printBoard(){
-        this.board.print();
-    }
-
-    public void printResult(){
-        if(gameStatus.equals(GameStatus.ENDED)){
-            System.out.println("Game has ended.");
-            System.out.println("Winner is: " + winner.getName());
-        } else {
-            System.out.println("Game is draw");
         }
     }
 

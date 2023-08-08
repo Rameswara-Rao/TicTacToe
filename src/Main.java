@@ -13,14 +13,21 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Game game;
 
-        game = gameController.createGame(3,
-                List.of(
-                        new Player(new Symbol('X'), "Naman", PlayerType.HUMAN),
-                        new Bot(new Symbol('O'), "Aman", BotDifficultyLevel.EASY)
-                ),
-                List.of(new OrderOneColumnWinningStrategy(),
-                        new OrderOneRowWinningStrategy(),
-                        new OrderOneDiagonalWinningStrategy()));
+        try {
+            game = gameController.createGame(3,
+                    List.of(
+                            new Player(new Symbol('X'), "Naman", PlayerType.HUMAN),
+                            new Bot(new Symbol('O'), "Aman", BotDifficultyLevel.EASY)
+                    ),
+                    List.of(new OrderOneColumnWinningStrategy(),
+                            new OrderOneRowWinningStrategy(),
+                            new OrderOneDiagonalWinningStrategy()));
+        } catch (Exception e){
+            System.out.println("Something went wrong");
+            return;
+        }
+
+        System.out.println("*************** Game is Starting ********************");
 
         while(gameController.getGameStatus(game).equals(GameStatus.IN_PROGRESS)){
             gameController.displayBoard(game);

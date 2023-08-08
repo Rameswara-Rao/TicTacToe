@@ -4,7 +4,7 @@ public class Move {
     private Cell cell;
     private Player player;
 
-    public Move(Cell cell, Player player) {
+    public Move(Player player, Cell cell) {
         this.cell = cell;
         this.player = player;
     }
