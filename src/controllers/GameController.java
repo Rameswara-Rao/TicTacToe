@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.InvalidGameParamsException;
 import models.Game;
 import models.GameStatus;
 import models.Player;
@@ -10,7 +11,7 @@ import java.util.List;
 public class GameController {
     public Game createGame(int dimension,
                            List<Player> players,
-                           List<WinningStrategy> winningStrategies){
+                           List<WinningStrategy> winningStrategies) throws InvalidGameParamsException {
         return Game.getBuilder()
                 .setDimension(dimension)
                 .setWinningStrategies(winningStrategies)
@@ -23,11 +24,11 @@ public class GameController {
     }
 
     public void makeMove(Game game) {
-
+        game.makeMove();
     }
 
     public void undo(Game game) {
-
+        game.undo();
     }
     public GameStatus getGameStatus(Game game) {
         return game.getGameStatus();

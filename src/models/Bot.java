@@ -1,11 +1,16 @@
 package models;
 
+import strategy.botplayingstrategies.BotPlayingStrategy;
+import strategy.botplayingstrategies.BotPlayingStrategyFactory;
+
 public class Bot extends Player{
     private BotDifficultyLevel botDifficultyLevel;
+    private BotPlayingStrategy botPlayingStrategy;
 
     public Bot(Symbol symbol,String name, BotDifficultyLevel botDifficultyLevel) {
         super(symbol, name, PlayerType.BOT);
         this.botDifficultyLevel = botDifficultyLevel;
+        this.botPlayingStrategy = BotPlayingStrategyFactory.getBotPlayingStrategyForDifficultyLevel(botDifficultyLevel);
     }
 
     public BotDifficultyLevel getBotDifficultyLevel() {
@@ -17,7 +22,7 @@ public class Bot extends Player{
     }
 
     @Override
-    Cell makeMove() {
-        return super.makeMove();
+    public Cell makeMove(Board board) {
+        return botPlayingStrategy.makeMove(board);
     }
 }

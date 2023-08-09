@@ -1,4 +1,5 @@
 import controllers.GameController;
+import exceptions.InvalidGameParamsException;
 import models.*;
 import strategy.winningstrategy.OrderOneColumnWinningStrategy;
 import strategy.winningstrategy.OrderOneDiagonalWinningStrategy;
@@ -13,17 +14,20 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Game game;
 
+        List<Player> players = List.of(
+                new Player(new Symbol('X'), "Naman", PlayerType.HUMAN),
+                new Bot(new Symbol('O'), "Aman", BotDifficultyLevel.EASY)
+        );
+        int dimension = 3;
+
         try {
-            game = gameController.createGame(3,
-                    List.of(
-                            new Player(new Symbol('X'), "Naman", PlayerType.HUMAN),
-                            new Bot(new Symbol('O'), "Aman", BotDifficultyLevel.EASY)
-                    ),
-                    List.of(new OrderOneColumnWinningStrategy(),
-                            new OrderOneRowWinningStrategy(),
-                            new OrderOneDiagonalWinningStrategy()));
-        } catch (Exception e){
-            System.out.println("Something went wrong");
+            game = gameController.createGame(dimension,
+                    players,
+                    List.of(new OrderOneColumnWinningStrategy(dimension, players),
+                            new OrderOneRowWinningStrategy(dimension, players),
+                            new OrderOneDiagonalWinningStrategy(players)));
+        } catch (InvalidGameParamsException e){
+            System.out.println("Seems like you gave invalid params. Updates Params");
             return;
         }
 
@@ -42,5 +46,6 @@ public class Main {
         }
 
         gameController.printResult(game);
+        gameController.displayBoard(game);
     }
 }

@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.InvalidGameParamsException;
 import strategy.winningstrategy.WinningStrategy;
 
 import java.util.ArrayList;
@@ -55,9 +56,14 @@ public class Game {
 
     public void makeMove(){
         Player currentPlayer = players.get(currentMovePlayerIndex);
-        Cell proposedCell = currentPlayer.makeMove();
+        System.out.println("It is " + currentPlayer.getName() +"'s turn.");
+
+        Cell proposedCell = currentPlayer.makeMove(board);
+
+        System.out.println("Move made at row: "+ proposedCell.getRow() + " col:"+ proposedCell.getCol());
 
         if (!validateMove(proposedCell)) {
+            System.out.println("Invalid move please try again");
             return;
         }
 
@@ -94,6 +100,28 @@ public class Game {
             }
         }
         return false;
+    }
+
+    public void undo(){
+        if (moves.size() == 0){
+            System.out.println("No move. Can't undo");
+            return;
+        }
+        Move lastMove = moves.get(moves.size() - 1);
+
+        for(WinningStrategy winningStrategy: winningStrategies){
+            winningStrategy.handleUndo(board, lastMove);
+        }
+
+        Cell cellInBoard = lastMove.getCell();
+        cellInBoard.setCellState(CellState.EMPTY);
+        cellInBoard.setPlayer(null);
+
+        moves.remove(lastMove);
+
+        currentMovePlayerIndex -= 1;
+        currentMovePlayerIndex += players.size();
+        currentMovePlayerIndex %= players.size();
     }
 
     public List<Move> getMoves() {
@@ -207,9 +235,9 @@ public class Game {
             return true;
         }
 
-        public Game build(){
+        public Game build() throws InvalidGameParamsException {
             if(!valid()){
-                throw new RuntimeException("Invalid params for game");
+                throw new InvalidGameParamsException("Invalid params for game");
             }
             return new Game(dimension, players, winningStrategies);
         }
